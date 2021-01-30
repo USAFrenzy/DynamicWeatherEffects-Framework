@@ -1,0 +1,140 @@
+###########################################################################
+#                     CMake Version To Use 
+###########################################################################
+cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
+###########################################################################
+#               This Will Add The Project Build Options 
+###########################################################################
+include(cmake/ProjectOptions.cmake)
+###########################################################################
+#               Warn Against Path To Root Folder
+###########################################################################
+include(cmake/PreventInSrcBuilds.cmake)
+assureoutofsourcebuilds()
+############################################################################
+#                      Enable Cache System
+############################################################################
+include("cmake/Cache.cmake")
+############################################################################
+#                Include The Meta Data Information
+############################################################################
+include(cmake/MetaData.cmake)
+###########################################################################
+#               Project Name And Info Via Meta Data  
+###########################################################################
+project(${META_PROJECT_NAME} LANGUAGES CXX)
+###########################################################################
+#      Compiler Settings- Interface Usage Of Project Options      
+###########################################################################
+include(cmake/ProjectSettings.cmake)
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_20)
+###########################################################################
+#  Compiiler Warnings- Interface Usage For Project Based On Compiler  
+###########################################################################
+include(cmake/CompilerWarnings.cmake)
+add_library(project_warnings INTERFACE)
+set_project_warnings(project_warnings)
+###########################################################################
+# Include The Sanitizers Options If Enabled (Enable In Sanitizers.cmake)
+# If Enabled, Arguments Are Passed To The Project Options Interface Lib
+###########################################################################
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(project_options)
+###########################################################################
+# Include Static Analysis (clang-tidy, cppcheck, include-what-you-use)
+###########################################################################
+include(cmake/StaticAnalyzers.cmake)
+###########################################################################
+#                   Use Solution Folders Feature For IDEs                               
+###########################################################################
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+###########################################################################
+#                     Setting Output Directories                             
+###########################################################################
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
+###########################################################################
+#                  Write The Version File Out                              
+###########################################################################
+file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
+
+
+#############################################################################
+#                   Dependencies Will Go Here
+#############################################################################
+# For Any Users That Might Adjust The Code Base - It's Assumed That You
+# Will Have CommonLibSSE And Added Its Path To An Environment Variable
+# Labeled CommonLibSSEPath
+add_subdirectory("$ENV{CommonLibSSEPath}" CommonLibSSE)
+
+if(ENABLE_TESTING)
+    find_package(catch2 REQUIRED)
+        if(CATCH2_FOUND)
+            include_directories(${CATCH2_INCLUDE_DIRS})
+        endif()
+endif()  
+###########################################################################
+#               Header And Source File Inclusions
+###########################################################################
+set(sources
+    "src/IniHandler.cpp"
+)
+source_group("Source Files" FILES ${sources})
+
+set(headers
+    "include/IniHandler.h"
+)
+source_group("Header Files" FILES ${headers})
+
+set(pch
+    "src/Pch/pch.cpp"
+    "src/Pch/pch.h"
+)
+source_group("pch" FILES ${pch})
+###########################################################################
+#               If Tests Are Enabled, Build Them
+###########################################################################
+if(ENABLE_TESTING)
+  enable_testing()
+    message(CHECK_START "Building Tests")
+    add_subdirectory(Tests)
+    message(CHECK_PASS "Finished Building Tests")
+else()
+    message("Skipping Compilation Of Tests")
+endif()
+###########################################################################
+#                     Creating The DLL
+###########################################################################
+add_library(
+	${META_PROJECT_NAME}
+	SHARED
+	${headers}
+	${sources}
+	.clang-format
+    .clang-tidy
+)
+target_include_directories(
+	${META_PROJECT_NAME}
+	PRIVATE
+		${CMAKE_CURRENT_BINARY_DIR}/include
+		${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor
+)
+target_link_libraries(
+	${META_PROJECT_NAME}
+	PRIVATE
+        project_options
+        project_warnings
+		CommonLibSSE::CommonLibSSE
+)
+target_precompile_headers(${META_PROJECT_NAME}
+PUBLIC
+${pch})
+##########################################################################
+# If Enabled, Run Static Analyzers On Targets From StaticAnalyzers.cmake 
+##########################################################################
+StaticAnalyze(
+    ${META_PROJECT_NAME}
+)
