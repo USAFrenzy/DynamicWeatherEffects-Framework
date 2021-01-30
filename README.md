@@ -5,7 +5,18 @@ This Is The Plugin Source Code Repo For What Will Be The FrameWork For The Dynam
 To Build, You'll First Need:
 - CommonLibSSE's Dependencies
     - span-lite
-    - spdlog
+    - spdlog 
+</br>
+
+Optional Dependencies:
+- For Static Analysis Checks (You'll Need To Set The Env Path If You Use These):
+    - cppcheck
+    - clang-tidy
+    - include-what-you-use
+    - ccache
+- For Tests:
+    - catch2
+
 - Generating Project Files
     - Run  ```"git clone https://github.com/USAFrenzy/DynamicWeatherEffects-Framework.git"```
     - Run  ```"git submodule update --init --recursive"```
@@ -18,7 +29,6 @@ To Build, You'll First Need:
         - Building ```DynamicWeatherEffects``` Should Build ```CommonLibSSE``` Anyways As It Relies On That Library
 
 Done! That's All You Need To Do!
-
 
 #### ********** Special Thanks And Credits ********** #### 
 Ryan-rsm-McKenzie - CommonLibSSE<br/>
