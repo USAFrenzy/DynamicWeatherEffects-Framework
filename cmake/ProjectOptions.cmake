@@ -16,4 +16,4 @@ option(ENABLE_SANITIZER_THREAD             "Enable thread sanitizer"            
 option(ENABLE_SANITIZER_MEMORY             "Enable memory sanitizer"                                  FALSE)
 option(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR "Enable undefined behavior sanitizer"                      FALSE)
 option(ENABLE_COVERAGE                     "Enable coverage reporting for gcc/clang"                  FALSE)
-################################# NEED TO ADD MORE HERE IN THE FUTURE #######################################
+######################################## ADD MORE HERE IN THE FUTURE #######################################

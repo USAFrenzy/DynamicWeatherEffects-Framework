@@ -1,0 +1,4 @@
+[submodule "vendor/CommonLibSSE"]
+	path = vendor/CommonLibSSE
+	url = https://github.com/USAFrenzy/CommonLibSSE.git
+
