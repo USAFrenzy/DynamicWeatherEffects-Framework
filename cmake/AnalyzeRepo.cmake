@@ -2,11 +2,11 @@
 #      Get Latest Commit SHA On Master Branch Of Dynamic Weather Effects
 #############################################################################
 file(DOWNLOAD
-    "https://api.github.com/repos/USAFrenzy/Redemption/commits/master"
-    "${PROJECT_BINARY_DIR}/DynamicWeatherEffects.github.data"
+    "https://api.github.com/repos/USAFrenzy/Redemption/commits/main"
+    "${PROJECT_BINARY_DIR}/DynamicWeatherEffects-Framework.github.data"
 )
 file(READ
-    "${PROJECT_BINARY_DIR}/DynamicWeatherEffects.github.data"
+    "${PROJECT_BINARY_DIR}/DynamicWeatherEffects-Framework.github.data"
     DWE_INFO
 )
 ##############################################################################
@@ -16,7 +16,7 @@ file(READ
 string(REGEX MATCH
     "\"sha\": \"([0-9a-f]+)\","
     DWE_SHA
-    ${REDEMPTION_INFO}
+    ${DWE_INFO}
 )
 string(SUBSTRING
     ${DWE_SHA}
@@ -25,7 +25,7 @@ string(SUBSTRING
     DWE_SHA
 )
 #########################################################################################################
-#  Get latest Commit On The Redemption Repository - APPLIED_REDEMPTION_SHA Can Be Set By Parent Script  #
+#      Get latest Commit On The DWE Repository - APPLIED_DWE_SHA Can Be Set By Parent Script  
 #########################################################################################################
 if(NOT APPLIED_DWE_SHA)
     set(APPLIED_DWE_SHA "")
@@ -40,5 +40,5 @@ endif()
     if (${APPLIED_REDEMPTION_SHA} STREQUAL ${REDEMPTION_SHA})
         message(STATUS "Dynamic Weather Effects Is Up-To-Date (${DWE_SHA})")
     else()
-        message(STATUS "Dyanamic Weather Effects Needs To Be Updated https://github.com/USAFrenzy/DynamicWeatherEffects/compare/${APPLIED_DWE_SHA}...master")
+        message(STATUS "Dyanamic Weather Effects Needs To Be Updated https://github.com/USAFrenzy/DynamicWeatherEffects-Framework/compare/${APPLIED_DWE_SHA}...main")
     endif()
