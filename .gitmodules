@@ -1,6 +1,6 @@
 [submodule "vendor/CommonLibSSE"]
 	path = vendor/CommonLibSSE
-	url = https://github.com/USAFrenzy/CommonLibSSE.git
+	url = https://github.com/Ryan-rsm-McKenzie/CommonLibSSE.git
 
 [submodule "vendor/json"]
 	path = vendor/json
