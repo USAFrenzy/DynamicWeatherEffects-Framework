@@ -1,0 +1,36 @@
+set(PROJECT_NAME Tests)
+
+#######################################################
+#                    Source groups
+#######################################################
+set(Tests
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/TestMain.cpp"
+)
+source_group("Tests" FILES ${Tests})
+#######################################################
+# This Will Most Likely Be Expanded To Cover Specific
+# Test Categories - For Now It's Just Simply The Main
+#######################################################
+set(ALL_FILES
+${Tests}
+)
+######################################################
+#                       Target
+######################################################
+add_executable(${PROJECT_NAME} ${ALL_FILES})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    INTERPROCEDURAL_OPTIMIZATION_DEBUG        "FALSE"
+    INTERPROCEDURAL_OPTIMIZATION_RELEASE      "TRUE"
+)
+
+target_include_directories(${PROJECT_NAME}
+PRIVATE
+${CMAKE_CURRENT_SOURCE_DIR}/vendor
+)
+
+target_link_libraries( ${PROJECT_NAME}
+PRIVATE
+    project_options
+    project_warnings
+)

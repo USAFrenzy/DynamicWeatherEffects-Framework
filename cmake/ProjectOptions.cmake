@@ -1,7 +1,7 @@
 #############################################################################################################
 #                                    Project Options                                                        #
 #############################################################################################################
-option(ENABLE_TESTING                      "Enable Test Builds"                                       OFF)
+option(ENABLE_TESTING                      "Enable Test Builds"                                       ON)
 option(ENABLE_FUZZ_TESTS                   "Enable Fuzz Testing Builds"                               OFF)
 option(ENABLE_CPPCHECK                     "Enable The Use Of cppcheck To Analyze Code Base"          OFF)
 option(ENABLE_IPO                          "Enable Interprocedural Optimization (LTO)"                OFF)

@@ -3,10 +3,6 @@
 ###########################################################################
 cmake_minimum_required(VERSION 3.18 FATAL_ERROR)
 ###########################################################################
-#               This Will Add The Project Build Options 
-###########################################################################
-include(cmake/ProjectOptions.cmake)
-###########################################################################
 #               Warn Against Path To Root Folder
 ###########################################################################
 include(cmake/PreventInSrcBuilds.cmake)
@@ -23,6 +19,14 @@ include(cmake/MetaData.cmake)
 #               Project Name And Info Via Meta Data  
 ###########################################################################
 project(${META_PROJECT_NAME} LANGUAGES CXX)
+###########################################################################
+#                    Include For Testing Option
+###########################################################################
+include(CTest)
+###########################################################################
+#               This Will Add The Project Build Options 
+###########################################################################
+include(cmake/ProjectOptions.cmake)
 ###########################################################################
 #      Compiler Settings- Interface Usage Of Project Options      
 ###########################################################################
@@ -64,17 +68,32 @@ file(WRITE "${PROJECT_BINARY_DIR}/VERSION" "${META_NAME_VERSION}")
 #############################################################################
 #                   Dependencies Will Go Here
 #############################################################################
-# For Any Users That Might Adjust The Code Base - It's Assumed That You
-# Will Have CommonLibSSE And Added Its Path To An Environment Variable
-# Labeled CommonLibSSEPath (Directory Containing CmakeLists.txt)
+
+#######################################
+# Update Git Submodules If Need Be    #
+#######################################
+if (ENABLE_GITSUBMODS)
+    find_package(Git QUIET)
+    if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
+        message(CHECK_START "Submodule(s) Updating")
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --recursive --remote
+                WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                RESULT_VARIABLE GIT_SUBMOD_RESULT)
+            if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+                message(CHECK_FAIL "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
+            endif() 
+    endif()
+        if(NOT EXISTS "${PROJECT_SOURCE_DIR}/Engine/vendor/CMakeLists.txt")
+            message(CHECK_FAIL "The submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+        endif()
+endif() 
+################################## End Git SubModules ################################## 
+
 add_subdirectory("vendor/CommonLibSSE" CommonLibSSE)
 
-if(ENABLE_TESTING)
-    find_package(Catch2 CONFIG REQUIRED)
-        if(CATCH2_FOUND)
-            include_directories(${CATCH2_INCLUDE_DIRS})
-        endif()
-endif()  
 ###########################################################################
 #               Header And Source File Inclusions
 ###########################################################################
@@ -100,7 +119,7 @@ source_group("pch" FILES ${pch})
 if(ENABLE_TESTING)
   enable_testing()
     message(CHECK_START "Building Tests")
-    add_subdirectory(Tests)
+    add_subdirectory(Test)
     message(CHECK_PASS "Finished Building Tests")
 else()
     message("Skipping Compilation Of Tests")
