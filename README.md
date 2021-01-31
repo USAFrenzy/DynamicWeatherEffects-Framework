@@ -35,8 +35,11 @@ To Build, You'll First Need:
 - Click On The ```Solution``` Tab And Hit ```Build```
 - Or Just Build Individually By Clicking On ```CommonLibSSE``` And ```Build``` And Then Clicking On ```DynamicWeatherEffects``` And ```Build```
     - Building ```DynamicWeatherEffects``` Should Build ```CommonLibSSE``` Anyways As It Relies On That Library
+- Once Fully Built, DynamicWeatherEffects.dll and CommonLibSSE.dll Will Be Found Under ```build\bin\configuration-built```
 
 Done! That's All You Need To Do! <br/>
+<br/>
+<br/>
 
 ### ********** Special Thanks And Credits ********** ###
 Ryan-rsm-McKenzie - CommonLibSSE <br/>
