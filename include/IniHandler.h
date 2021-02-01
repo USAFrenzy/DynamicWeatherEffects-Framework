@@ -8,6 +8,14 @@
  * config::helper::TogOptionToStr(Toggles::option);
  * config::helper::SliderStrToOption("sliderOptionText");
  **************************************************************/
+/*
+    json git: https://github.com/nlohmann/json#examples
+	Might be able to go ahead and create a struct of json objects and then parse the
+    json nodes to read/write values to those nodes using the toStr and toState functions?
+	Then in the config namespace of the plugin, add the json structures and
+	functions to be able to use the configuration types that are converted to strings
+	and then parsed by json to find the nodes and read/write the values to those nodes?
+*/
 
 namespace inihandler {
 	using json = nlohmann::json;
